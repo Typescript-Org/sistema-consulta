@@ -147,4 +147,32 @@ confirmadas.forEach((c) => console.log(exibirConsulta(c)));
 console.log("=== CONSULTAS FUTURAS ===");
 const futuras = listarConsultasFuturas(todasConsultas);
 futuras.forEach((c) => console.log(exibirConsulta(c)));
+// Calcular faturamento (soma dos valores das consultas realizadas)
+function calcularFaturamento(consultas) {
+    return consultas
+        .filter((consulta) => consulta.status === "Realizada")
+        .reduce((total, consulta) => total + consulta.valor, 0);
+}
+// Cancelar faturamento (muda status de "Realizada" para "Cancelada")
+function cancelarFaturamento(consulta) {
+    if (consulta.status !== "Realizada") {
+        console.log(`Não é possível cancelar o faturamento da consulta #${consulta.id}: status atual é "${consulta.status}".`);
+        return null;
+    }
+    return Object.assign(Object.assign({}, consulta), { status: "Cancelada" });
+}
+// Demonstrando faturamento
+console.log("=== FATURAMENTO TOTAL ===");
+const faturamentoTotal = calcularFaturamento(todasConsultas);
+console.log(`Faturamento total: R$ ${faturamentoTotal.toFixed(2)}`);
+// Cancelando faturamento da consulta 2 (Realizada)
+console.log("\n=== CANCELANDO FATURAMENTO DA CONSULTA 2 ===");
+const consulta2Cancelada = cancelarFaturamento(consulta2Realizada);
+if (consulta2Cancelada) {
+    todasConsultas[1] = consulta2Cancelada;
+    console.log(exibirConsulta(consulta2Cancelada));
+}
+console.log("=== FATURAMENTO APÓS CANCELAMENTO ===");
+const novoFaturamento = calcularFaturamento(todasConsultas);
+console.log(`Faturamento atualizado: R$ ${novoFaturamento.toFixed(2)}`);
 export {};
